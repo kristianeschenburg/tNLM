@@ -25,7 +25,7 @@ class TNLM(object):
         self.h = h
         
         
-    def smooth(self,darray,adj):
+    def fitler(self,darray,adj):
         
         """
         Parameters:
@@ -36,7 +36,7 @@ class TNLM(object):
                         The source vertex is included in its own neighborhood.
         """
         
-        [darray,mu,std] = self.whiten(darray)
+        [darray,mu,std] = self.standardize(darray)
         dv,dt = darray.shape
         nonzeros = std>0
         
@@ -72,10 +72,10 @@ class TNLM(object):
 
         return source_out
         
-    def whiten(self,darray):
+    def standardize(self,darray):
         
         """
-        Method to whiten the data array.
+        Method to standardize the data array.
         
         Parameters:
         - - - - -
