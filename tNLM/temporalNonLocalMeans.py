@@ -13,14 +13,7 @@ class TNLM(object):
     """
     Class to implement temporal non-local means smoothing on resting state
     time series MRI data.
-    
-    First described in:
-        
-        C Bhushan, M Chong, S Choi, AA Joshi, JP Haldar, H Damasio, RM Leahy. 
-        (2016) Non-local means filtering for cortical parcellation of resting 
-        fMRI, Annual Meeting of the Organization for Human Brain Mapping (OHBM), 
-        Geneva, p.2194.
-    
+
     Parameters:
     - - - - -
         h : smoothing kernel size
