@@ -1,8 +1,10 @@
 # tNLM
 
-Note**  Class currently is not parallelized, and will loop over every surface vertex.  I'm working on incorporating Python's **multiprocessing** library to facillitate parallelized vertex filtering.
+Code to apply temporal non-local means filtering to fMRI.
 
-Code to apply temporal non-local means filtering to fMRI.  Manjón et al. described a method to adapt the smoothing strength based on the local signol noise -- this adaptive smoothing has not yet been applied to fMRI.  Will be updated soon.
+**Note #1**  Class currently is not parallelized, and will loop over every surface vertex.  I'm working on incorporating Python's **multiprocessing** library to facillitate parallelized vertex filtering.
+
+**Note #2** Manjón et al. described a method to adapt the smoothing strength based on the local signol noise -- this adaptive smoothing has not yet been applied to fMRI.  Will be updated soon.
 
 Non-local means applied to MRI data in several papers:
 
