@@ -1,6 +1,6 @@
 # tNLM
 
-Code to apply temporal non-local means filtering to fMRI as described in Bushan et a.
+Code to apply temporal non-local means filtering to fMRI as described in Bushan et al, 2016.
 
 **Note #1:**  tNLM method is currently is not parallelized, and will loop over every surface vertex.  I'm working on incorporating Python's **multiprocessing** library to facillitate parallelized vertex filtering.
 
