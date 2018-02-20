@@ -95,6 +95,11 @@ class TNLM(object):
 
         return [darray,mu,std]
     
+
+"""
+The below is similar to above, but allows for multiprocessing.
+I don't think this is optimized as well as possible -- still in the works.
+"""
 def smooth(darray,adj,h):
         
     """
