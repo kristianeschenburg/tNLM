@@ -5,8 +5,12 @@ Created on Sat Jan 20 21:37:45 2018
 
 @author: kristianeschenburg
 """
+import multiprocessing as mp
+from joblib import Parallel,delayed
 
 import numpy as np
+
+NUM_CORES = mp.cpu_count()
 
 class TNLM(object):
     
@@ -24,8 +28,7 @@ class TNLM(object):
 
         self.h = h
         
-        
-    def fitler(self,darray,adj):
+    def smooth(self,darray,adj):
         
         """
         Parameters:
@@ -35,13 +38,13 @@ class TNLM(object):
                         are at most a distance, k, from the source vertex.
                         The source vertex is included in its own neighborhood.
         """
-        
+
         [darray,mu,std] = self.standardize(darray)
         dv,dt = darray.shape
         nonzeros = std>0
-        
+
         darray_tnlm = np.zeros((darray.shape))
-        
+
         for v in np.arange(dv):
             if nonzeros[v]:
                 
@@ -58,8 +61,11 @@ class TNLM(object):
         """
         Compute weights for each neighbor
         """
-
+        
+        print 'run'
+        
         h = self.h
+        
         vn,vt = neighbors.shape
 
         d = source[np.newaxis,:] - neighbors
@@ -88,3 +94,69 @@ class TNLM(object):
         darray = darray/std[:,np.newaxis]
 
         return [darray,mu,std]
+    
+def smooth(darray,adj,h):
+        
+    """
+    Parameters:
+    - - - - -
+        darray : resting state data array
+        adj : pre-computed adjacency list, where adjacent vertices
+                    are at most a distance, k, from the source vertex.
+                    The source vertex is included in its own neighborhood.
+    """
+
+    [darray,mu,std] = standardize(darray)
+    dv,dt = darray.shape
+
+    darray_tnlm = np.zeros((darray.shape))
+    
+    acceptedV = [k for k in adj.keys() if adj[k]]
+
+    results = Parallel(n_jobs=NUM_CORES*2)(delayed(tnlm)(darray[i,:],
+                       darray[adj[i],:],i,h) for i in acceptedV)
+    
+    r,s = zip(*results)
+    darray_tnlm[list(s),:] = np.row_stack(r)
+
+    return darray_tnlm
+    
+def tnlm(D,neighbors,source,h):
+        
+    """
+    Compute weights for each neighbor
+    """
+
+    vn,vt = neighbors.shape
+
+    d = D[np.newaxis,:] - neighbors
+    d = (d**2).sum(axis=1)/vt
+    
+    w = np.exp(-1.*d/(h**2))
+    w = w/w.sum()
+    
+    smoothed = (neighbors*w[:,np.newaxis]).sum(axis=0)
+    
+    print smoothed.shape
+
+    return (smoothed,source)
+    
+    
+def standardize(darray):
+        
+    """
+    Method to standardize the data array.
+    
+    Parameters:
+    - - - - -
+        darray : resting state data array
+    """
+
+    mu = np.mean(darray,axis=1)
+    darray = darray - mu[:,np.newaxis]
+    std = np.std(darray,axis=1)
+    darray = darray/std[:,np.newaxis]
+    
+    darray[np.isnan(darray)] = 1e-6
+
+    return [darray,mu,std]
