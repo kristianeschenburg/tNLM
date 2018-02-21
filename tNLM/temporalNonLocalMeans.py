@@ -119,7 +119,7 @@ def smooth(darray,adj,h):
     acceptedV = [k for k in adj.keys() if adj[k]]
 
     print 'Parallelizing tnlm'
-    results = Parallel(n_jobs=NUM_CORES*2)(delayed(tnlm)(darray[i,:],
+    results = Parallel(n_jobs=NUM_CORES)(delayed(tnlm)(darray[i,:],
                        darray[adj[i],:],i,h) for i in acceptedV)
     
     print 'tnlm complete'
