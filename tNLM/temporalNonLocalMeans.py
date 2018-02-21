@@ -123,10 +123,13 @@ def smooth(darray,adj,h):
                        darray[adj[i],:],i,h) for i in acceptedV)
     
     print 'tnlm complete'
-    
+    print 'unzipping'
     r,s = zip(*results)
+    
+    print 'allocating space'
     darray_tnlm[list(s),:] = np.row_stack(r).squeeze()
 
+    print 'returning array'
     return darray_tnlm
     
 def tnlm(D,neighbors,source,h):
