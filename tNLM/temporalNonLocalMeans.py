@@ -118,11 +118,14 @@ def smooth(darray,adj,h):
     
     acceptedV = [k for k in adj.keys() if adj[k]]
 
+    print 'Parallelizing tnlm'
     results = Parallel(n_jobs=NUM_CORES*2)(delayed(tnlm)(darray[i,:],
                        darray[adj[i],:],i,h) for i in acceptedV)
     
+    print 'tnlm complete'
+    
     r,s = zip(*results)
-    darray_tnlm[list(s),:] = np.row_stack(r)
+    darray_tnlm[list(s),:] = np.row_stack(r).squeeze()
 
     return darray_tnlm
     
@@ -141,8 +144,6 @@ def tnlm(D,neighbors,source,h):
     w = w/w.sum()
     
     smoothed = (neighbors*w[:,np.newaxis]).sum(axis=0)
-    
-    print smoothed.shape
 
     return (smoothed,source)
     
