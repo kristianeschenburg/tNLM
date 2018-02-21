@@ -17,7 +17,7 @@ import shortestpath
 import tNLM
 
 import networkx as nx
-import scipy.io as sio
+import h5py
 
 if __name__ == "__main__":
     
@@ -51,6 +51,6 @@ if __name__ == "__main__":
             APSP = {k: apsp[k].keys() for k in accepted}
             
             smoothed = tNLM.smooth(rest,APSP,h)
-            smooth = {'tnlm': smoothed}
-            sio.savemat(outFile,smooth)
-    
+            outF = h5py.File(outFile,mode='w')
+            outF.create_dataset('tnlm',data=smoothed)
+            outF.close()    
